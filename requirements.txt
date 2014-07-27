@@ -1,0 +1,6 @@
+bottle
+webtest
+mongoengine
+git+https://github.com/ng-bottle-libraries/utils#egg=namespace_utils
+git+https://github.com/ng-bottle-libraries/oauth2-rfc6749#egg=rfc6749
+git+https://github.com/ng-bottle-libraries/models#egg=namespace_models
