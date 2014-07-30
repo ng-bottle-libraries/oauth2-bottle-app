@@ -6,15 +6,11 @@ from rfc6749.oauth2_errors import OAuth2Error, error
 from rfc6749.Tokens import AccessToken
 from namespace_models.User import User
 from namespace_utils.validators import is_email
-
+from namespace_utils.bottle_helpers import from_params_or_json
 
 oauth2_app = Bottle(catchall=False, autojson=True)
 
-__version__ = '0.0.6'
-
-
-def from_params_or_json(req, field):
-    return req.params.get(field) or (req.json.get(field) if req.json else '')
+__version__ = '0.0.7'
 
 
 def oauth2_error_catcher(environ, start_response):
@@ -57,8 +53,6 @@ def oauth2_secured():
 @oauth2_app.route('/api/oauth2/register_or_login', method=['GET', 'POST', 'PUT', 'OPTIONS'])
 def register_or_login():
     """ Registers or logs in the user, always returning access_token on success """
-    response.content_type = 'application/json'
-
     email = from_params_or_json(request, 'email')
     email = email if is_email(email) else ''
     password = from_params_or_json(request, 'password')
@@ -77,8 +71,6 @@ def register_or_login():
 
 @oauth2_app.route('/api/oauth2/register', method=['POST', 'PUT'])
 def register(email=None, password=None):
-    response.content_type = 'application/json'
-
     email = from_params_or_json(request, 'email') or email
     email = email if is_email(email) else ''
     password = from_params_or_json(request, 'password') or password
@@ -105,8 +97,6 @@ def register(email=None, password=None):
 
 @oauth2_app.route('/api/oauth2/login')
 def login(email=None, password=None, grant_type=None):
-    response.content_type = 'application/json'
-
     email = from_params_or_json(request, 'email') or email
     email = email if is_email(email) else ''
     password = from_params_or_json(request, 'password') or password
@@ -128,8 +118,6 @@ def login(email=None, password=None, grant_type=None):
 
 @oauth2_app.route('/api/oauth2/logout', method=['GET', 'DELETE'])
 def logout():
-    response.content_type = 'application/json'
-
     access_token = from_params_or_json(request, 'access_token')
     try:
         User().logout(access_token=access_token)
@@ -142,8 +130,6 @@ def logout():
 
 @oauth2_app.route('/api/oauth2/unregister', method='DELETE')
 def unregister():
-    response.content_type = 'application/json'
-
     email = from_params_or_json(request, 'email')
     email = email if is_email(email) else ''
     password = from_params_or_json(request, 'password')
@@ -159,7 +145,6 @@ def unregister():
 
 @oauth2_app.route('/api/meta', method=['GET', 'POST', 'PUT', 'OPTIONS'])
 def meta():
-    response.content_type = 'application/json'
     return {'request.params': request.params.dict,
             'request.query': request.query.dict,
             'request.json.keys()': request.json.keys() if request.json else []}
@@ -168,7 +153,6 @@ def meta():
 @oauth2_app.route('/api/secrets')
 @oauth2_secured()
 def secrets():
-    response.content_type = 'application/json'
     return {'my_secret': 'is_out!'}
 
 
