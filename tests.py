@@ -30,6 +30,9 @@ class TestFunctionalOAuth2PasswordCredentialsGrant(TestCase):
         self.assertIn('access_token', register_resp.json)
         self.assertIn('expires_in', register_resp.json)
 
+        # Save access token
+        self.__class__.access_token = register_resp.json['access_token']
+
     def test_2_login_failure(self):
         self.assertRaises(AppError, lambda: self.app.get('/api/oauth2/login', params=self.users[1]))
         login_resp = self.app.get('/api/oauth2/login', params=self.users[1], expect_errors=True)
@@ -59,6 +62,10 @@ class TestFunctionalOAuth2PasswordCredentialsGrant(TestCase):
         self.assertIn('access_token', register_or_login_resp.json)
         self.assertIn('expires_in', register_or_login_resp.json)
 
+        # Save access token
+        self.__class__.access_token = register_or_login_resp.json['access_token']
+
+
     def test_3_register_or_login_failure_login(self):
         bad_user = self.users[1].copy()
         bad_user['password'] = 'fooooooooooo wrong'
@@ -74,6 +81,9 @@ class TestFunctionalOAuth2PasswordCredentialsGrant(TestCase):
         self.assertEqual(register_or_login_resp.status_code, 200)
         self.assertIn('access_token', register_or_login_resp.json)
         self.assertIn('expires_in', register_or_login_resp.json)
+
+        # Save access token
+        self.__class__.access_token = register_or_login_resp.json['access_token']
 
     def test_4_access_token_failure(self):
         """ Attempt to access protected resource """
