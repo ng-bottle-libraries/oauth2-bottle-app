@@ -1,6 +1,7 @@
 from unittest import TestCase, main as unittest_main
 
 from webtest import TestApp, AppError
+from namespace_utils.test_class import Test
 
 from oauth2_bottle_app import oauth2_app
 
@@ -65,7 +66,6 @@ class TestFunctionalOAuth2PasswordCredentialsGrant(TestCase):
         # Save access token
         self.__class__.access_token = register_or_login_resp.json['access_token']
 
-
     def test_3_register_or_login_failure_login(self):
         bad_user = self.users[1].copy()
         bad_user['password'] = 'fooooooooooo wrong'
@@ -118,16 +118,13 @@ class TestFunctionalOAuth2PasswordCredentialsGrant(TestCase):
         self.assertNotEqual(tok_resp.status_code, 200)
 
     @classmethod
-    def assert_equal(cls, expect, got):
-        assert expect == got, "Expected: '{0}', got '{1}'".format(expect, got)
-
-    @classmethod
     def tearDownClass(cls):
         unregister_resps = (cls.app.delete('/api/oauth2/unregister', params=cls.users[1]),
                             cls.app.delete('/api/oauth2/unregister', params=cls.users[2]))
         for unregister_resp in unregister_resps:
-            cls.assert_equal(got=unregister_resp.content_type, expect=None)
-            cls.assert_equal(got=unregister_resp.status, expect="204 No Content")
+            self = Test()
+            self.assertEqual(got=unregister_resp.content_type, expect=None)
+            self.assertEqual(got=unregister_resp.status, expect="204 No Content")
 
 
 if __name__ == '__main__':
