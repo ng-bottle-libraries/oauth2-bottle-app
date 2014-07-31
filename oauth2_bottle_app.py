@@ -10,7 +10,7 @@ from namespace_utils.bottle_helpers import from_params_or_json
 
 oauth2_app = Bottle(catchall=False, autojson=True)
 
-__version__ = '0.0.9'
+__version__ = '0.1.0'
 
 
 def oauth2_error_catcher(environ, start_response):

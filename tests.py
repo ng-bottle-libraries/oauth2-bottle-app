@@ -1,7 +1,7 @@
 from unittest import TestCase, main as unittest_main
 
 from webtest import TestApp, AppError
-from namespace_utils.test_class import Test
+from namespace_utils import test_funs as test
 
 from oauth2_bottle_app import oauth2_app
 
@@ -122,9 +122,8 @@ class TestFunctionalOAuth2PasswordCredentialsGrant(TestCase):
         unregister_resps = (cls.app.delete('/api/oauth2/unregister', params=cls.users[1]),
                             cls.app.delete('/api/oauth2/unregister', params=cls.users[2]))
         for unregister_resp in unregister_resps:
-            self = Test()
-            self.assertEqual(got=unregister_resp.content_type, expect=None)
-            self.assertEqual(got=unregister_resp.status, expect="204 No Content")
+            test.assertEqual(got=unregister_resp.content_type, expect=None)
+            test.assertEqual(got=unregister_resp.status, expect="204 No Content")
 
 
 if __name__ == '__main__':
